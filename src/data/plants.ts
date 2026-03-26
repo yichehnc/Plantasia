@@ -46,7 +46,7 @@ export const INITIAL_PLANTS: Plant[] = [
       shadeTolerant: true,
       brightIndirect: true,
     },
-    image: 'https://images.unsplash.com/photo-1545239351-ef35f43d514b?q=80&w=1000&auto=format&fit=crop', // Pencil cactus-ish
+    image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?q=80&w=1000&auto=format&fit=crop', // Pencil cactus-ish
     vibrancy: 0.85,
     lastWatered: new Date().toISOString(),
     journal: [
@@ -95,7 +95,7 @@ export const INITIAL_PLANTS: Plant[] = [
       shadeTolerant: true,
       brightIndirect: true,
     },
-    image: 'https://images.unsplash.com/photo-1622467243786-adb083a21ad1?q=80&w=1000&auto=format&fit=crop', // Philodendron
+    image: 'https://images.unsplash.com/photo-1598880940080-ff9a29891b85?q=80&w=1000&auto=format&fit=crop', // Philodendron
     vibrancy: 0.9,
     lastWatered: new Date().toISOString(),
     journal: []
