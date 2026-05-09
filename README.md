@@ -1,20 +1,52 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Plantasia
 
-# Run and deploy your AI Studio app
+Plantasia is a poster-style plant care app for keeping a living archive of houseplants, watering rituals, and plant notes. The interface opens with a huge editorial reminder, then scrolls into a Pinterest-like wall of plant posters.
 
-This contains everything you need to run your app locally.
+![Plantasia landing page](docs/screenshot.png)
 
-View your app in AI Studio: https://ai.studio/apps/c21246af-27e7-4f0f-903b-0c4860b8f7bb
+## What It Does
+
+- Shows a full-screen "Water the Plants" landing poster with scroll-driven motion.
+- Seeds the archive with 11 houseplants.
+- Uses deterministic pixel plant placeholders instead of stock photos.
+- Lets users add a plant with the pixel placeholder or upload their own plant photo.
+- Tracks plant status, watering frequency, light needs, pet friendliness, notes, and journal entries.
+- Includes interactive plant detail views with watering, misting, vibrancy, and generative audio moments.
+
+## Tech Stack
+
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- Motion
+- Tone.js
+- Lucide React
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
+Prerequisite: Node.js
 
+```bash
+npm install
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+The Vite dev server runs at:
+
+```text
+http://localhost:3000
+```
+
+## Useful Commands
+
+```bash
+npm run lint
+npm run build
+```
+
+## Product Direction
+
+Plantasia is intentionally moving away from remote stock photos. Seeded plants should use local deterministic pixel placeholders until the user uploads their own real plant photo.
+
+The next product plan lives in [TODO.md](TODO.md).
