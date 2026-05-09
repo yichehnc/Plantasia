@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plant } from '../data/plants';
 import { cn } from '../lib/utils';
-import { CloudRain } from 'lucide-react';
+import { CloudRain, Sprout } from 'lucide-react';
 import { audioEngine } from '../utils/audio';
 
 interface PlantCardProps {
@@ -13,6 +13,7 @@ interface PlantCardProps {
 
 export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }) => {
   const [isMisting, setIsMisting] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
 
   const handleMist = async () => {
@@ -60,20 +61,30 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }
       className="group cursor-pointer relative flex flex-col items-center text-center"
     >
       {/* Image Container - Minimal, no border, just the image */}
-      <div className="relative w-full aspect-[3/4] overflow-hidden mb-3">
-        <motion.img 
-          src={plant.image} 
-          alt={plant.name}
-          className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:scale-105"
-          style={{ 
-            // Base grayscale, color comes back with vibrancy
-            filter: `grayscale(${100 - (plant.vibrancy * 100)}%) contrast(1.2) brightness(1.05)`,
-            // Cut-out effect (masking) could be applied here if we had transparent PNGs, 
-            // but for photos, we'll stick to a clean crop.
-            // Let's add a subtle mix-blend mode to make it look printed
-            mixBlendMode: 'multiply'
-          }}
-        />
+      <div
+        className="relative mb-3 w-full overflow-hidden bg-white/60 shadow-[0_22px_45px_rgba(26,26,26,0.06)]"
+        style={{ aspectRatio: plant.posterRatio ?? 0.75 }}
+      >
+        {imageFailed ? (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-[radial-gradient(circle_at_50%_30%,rgba(40,167,69,0.2),transparent_42%),linear-gradient(135deg,rgba(255,255,255,0.8),rgba(244,241,234,0.4))] p-8 text-green-vibrant">
+            <Sprout className="h-16 w-16 stroke-[1.2]" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-ink/40">
+              Botanical study
+            </span>
+          </div>
+        ) : (
+          <motion.img
+            src={plant.image}
+            alt={plant.name}
+            onError={() => setImageFailed(true)}
+            className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105"
+            style={{
+              filter: `grayscale(${100 - (plant.vibrancy * 100)}%) contrast(1.2) brightness(1.05)`,
+              imageRendering: plant.image.startsWith('data:image/svg+xml') ? 'pixelated' : 'auto',
+              mixBlendMode: 'multiply'
+            }}
+          />
+        )}
         
         {/* Mist Overlay */}
         <AnimatePresence>
@@ -104,8 +115,8 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }
       {plant.status !== 'Thriving' && (
         <div className={cn(
           "absolute top-0 right-0 w-2 h-2 rounded-full shadow-sm",
-          plant.status === 'Needs Attention' || plant.status === 'Not okay' ? "bg-yellow-500" : 
-          plant.status === 'DEAD' ? "bg-red-500" : "bg-blue-400"
+          plant.status === 'Needs Attention' ? "bg-yellow-500" :
+          plant.status === 'Dead' ? "bg-red-500" : "bg-blue-400"
         )} />
       )}
     </motion.div>

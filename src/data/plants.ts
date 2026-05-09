@@ -1,3 +1,5 @@
+import { generatePixelPlant } from '../utils/pixelPlant';
+
 export interface JournalEntry {
   id: string;
   date: string;
@@ -24,10 +26,13 @@ export interface Plant {
     brightIndirect: boolean;
   };
   image: string;
+  posterRatio?: number;
   vibrancy: number; // 0.0 to 1.0
   lastWatered: string; // ISO date
   journal: JournalEntry[];
 }
+
+const daysAgo = (days: number) => new Date(Date.now() - 86400000 * days).toISOString();
 
 export const INITIAL_PLANTS: Plant[] = [
   {
@@ -46,9 +51,10 @@ export const INITIAL_PLANTS: Plant[] = [
       shadeTolerant: true,
       brightIndirect: true,
     },
-    image: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?q=80&w=1000&auto=format&fit=crop', // Pencil cactus-ish
+    image: generatePixelPlant('pencil-cactus'),
+    posterRatio: 0.72,
     vibrancy: 0.85,
-    lastWatered: new Date().toISOString(),
+    lastWatered: daysAgo(1),
     journal: [
       {
         id: 'j1',
@@ -68,15 +74,17 @@ export const INITIAL_PLANTS: Plant[] = [
     notes: 'Leaves will droop when thirsty. Mist frequently.',
     petFriendly: false,
     purchaseDate: '2023-12-15',
+    repottedDate: '2024-02-01',
     light: 'Indirect Bright',
     environmentalNeeds: {
       ventilation: true,
       shadeTolerant: false,
       brightIndirect: true,
     },
-    image: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=1000&auto=format&fit=crop', // Alocasia
+    image: generatePixelPlant('alocasia-regal-shields'),
+    posterRatio: 0.62,
     vibrancy: 0.4,
-    lastWatered: new Date(Date.now() - 86400000 * 8).toISOString(), // 8 days ago
+    lastWatered: daysAgo(8),
     journal: []
   },
   {
@@ -95,9 +103,10 @@ export const INITIAL_PLANTS: Plant[] = [
       shadeTolerant: true,
       brightIndirect: true,
     },
-    image: 'https://images.unsplash.com/photo-1598880940080-ff9a29891b85?q=80&w=1000&auto=format&fit=crop', // Philodendron
+    image: generatePixelPlant('philodendron-florida'),
+    posterRatio: 0.86,
     vibrancy: 0.9,
-    lastWatered: new Date().toISOString(),
+    lastWatered: daysAgo(0),
     journal: []
   },
   {
@@ -117,9 +126,10 @@ export const INITIAL_PLANTS: Plant[] = [
       shadeTolerant: true,
       brightIndirect: true,
     },
-    image: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=1000&auto=format&fit=crop', // Monstera
+    image: generatePixelPlant('monstera-deliciosa'),
+    posterRatio: 0.7,
     vibrancy: 0.65,
-    lastWatered: new Date(Date.now() - 86400000 * 5).toISOString(),
+    lastWatered: daysAgo(5),
     journal: [
       {
         id: 'j2',
@@ -128,5 +138,159 @@ export const INITIAL_PLANTS: Plant[] = [
         tags: ['Repotted']
       }
     ]
+  },
+  {
+    id: '5',
+    name: 'Elkhorn Fern A',
+    species: 'Platycerium bifurcatum',
+    status: 'Thriving',
+    frequency: '1/week',
+    waterAmount: '600ml',
+    notes: 'Do not wipe off the furry scales. Likes humidity and regular misting.',
+    petFriendly: false,
+    purchaseDate: '2023-11-20',
+    light: 'Moderate',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: true,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('elkhorn-fern-a'),
+    posterRatio: 0.58,
+    vibrancy: 0.78,
+    lastWatered: daysAgo(3),
+    journal: []
+  },
+  {
+    id: '6',
+    name: 'Philodendron Marble Queen',
+    species: 'Epipremnum aureum',
+    status: 'Thriving',
+    frequency: '1/week',
+    waterAmount: '600ml',
+    notes: 'Bright indirect light keeps the variegation crisp.',
+    petFriendly: false,
+    purchaseDate: '2023-11-16',
+    light: 'Indirect Bright',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: true,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('philodendron-marble-queen'),
+    posterRatio: 0.75,
+    vibrancy: 0.88,
+    lastWatered: daysAgo(2),
+    journal: []
+  },
+  {
+    id: '7',
+    name: "Devil's Ivy 300mm",
+    species: 'Epipremnum aureum',
+    status: 'Thriving',
+    frequency: '1/week',
+    waterAmount: '1.2L',
+    notes: 'A reliable climber and trailing plant. Rotate for even growth.',
+    petFriendly: false,
+    purchaseDate: '2023-12-04',
+    light: 'Indirect Bright',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: true,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('devils-ivy-300mm'),
+    posterRatio: 0.66,
+    vibrancy: 0.92,
+    lastWatered: daysAgo(4),
+    journal: []
+  },
+  {
+    id: '8',
+    name: 'Syngonium Panda',
+    species: 'Syngonium podophyllum',
+    status: 'Alive',
+    frequency: '1/week',
+    waterAmount: '600ml',
+    notes: 'Propagated cutting. Keep soil lightly moist while roots settle.',
+    petFriendly: false,
+    purchaseDate: '2023-12-04',
+    light: 'Indirect Bright',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: true,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('syngonium-panda'),
+    posterRatio: 0.9,
+    vibrancy: 0.62,
+    lastWatered: daysAgo(6),
+    journal: []
+  },
+  {
+    id: '9',
+    name: 'Philodendron Fuzzy Petiole',
+    species: 'Philodendron nangaritense',
+    status: 'Needs Attention',
+    frequency: '1/week',
+    waterAmount: '600ml',
+    notes: 'Under watch. Check petioles and undersides of leaves before watering.',
+    petFriendly: false,
+    purchaseDate: '2024-01-14',
+    light: 'Indirect Bright',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: true,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('philodendron-fuzzy-petiole'),
+    posterRatio: 0.6,
+    vibrancy: 0.48,
+    lastWatered: daysAgo(9),
+    journal: []
+  },
+  {
+    id: '10',
+    name: 'Philodendron Mican',
+    species: 'Philodendron hederaceum',
+    status: 'Alive',
+    frequency: '1/week',
+    waterAmount: '<300ml',
+    notes: 'Velvet leaves prefer indirect light and a gentle watering hand.',
+    petFriendly: false,
+    purchaseDate: '2024-01-20',
+    light: 'Indirect Bright',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: true,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('philodendron-mican'),
+    posterRatio: 0.8,
+    vibrancy: 0.56,
+    lastWatered: daysAgo(5),
+    journal: []
+  },
+  {
+    id: '11',
+    name: 'Air Plants A B C D E',
+    species: 'Tillandsia',
+    status: 'Alive',
+    frequency: '1/week',
+    waterAmount: 'Bath',
+    notes: 'Submerge for 3 hours, then shake upside down so water does not pool at the base.',
+    petFriendly: false,
+    purchaseDate: '2024-02-02',
+    light: 'Direct Light',
+    environmentalNeeds: {
+      ventilation: true,
+      shadeTolerant: false,
+      brightIndirect: true,
+    },
+    image: generatePixelPlant('air-plants'),
+    posterRatio: 0.68,
+    vibrancy: 0.74,
+    lastWatered: daysAgo(7),
+    journal: []
   }
 ];
