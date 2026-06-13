@@ -140,9 +140,13 @@ export default function App() {
             <div className="space-y-6">
               <div className="space-y-4">
                 <p className="eyebrow">Watering ritual</p>
-                <h1 className="display-title max-w-4xl text-leaf">
-                  Keep every room in sync with a calmer, sharper plant archive.
-                </h1>
+                <div className="max-w-md overflow-hidden rounded-[2rem] border border-ink/10 bg-white/70 p-3 shadow-soft">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3c/Mother_Earths_Plantasia_Cover.jpg/250px-Mother_Earths_Plantasia_Cover.jpg"
+                    alt="Plantasia album cover"
+                    className="h-auto w-full rounded-[1.4rem] object-cover"
+                  />
+                </div>
                 <p className="text-base leading-7 text-ink/65 md:hidden">
                   Track care and see what needs attention first.
                 </p>
@@ -170,7 +174,7 @@ export default function App() {
               </div>
             </div>
 
-            <aside className="border-t border-ink/10 pt-4 md:border md:border-ink/10 md:bg-white/35 md:p-5 md:shadow-soft">
+            <aside className="hidden border-t border-ink/10 pt-4 md:block md:border md:border-ink/10 md:bg-white/35 md:p-5 md:shadow-soft">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="eyebrow">Focus queue</p>
@@ -210,31 +214,21 @@ export default function App() {
 
       <main className="relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8 lg:px-10">
         <section className="panel-solid mb-8 p-5 md:p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="eyebrow">Living archive</p>
-              <h2 className="mt-2 font-display text-4xl text-ink md:text-5xl">{filteredPlants.length} plants on record</h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/60 max-md:hidden md:text-base">
-                Every card keeps the same core data and interactions from the current Plantasia app, now organized for faster scanning and a cleaner visual rhythm.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={[
-                    'rounded-full px-4 py-2 text-sm font-semibold transition',
-                    activeFilter === filter
-                      ? 'bg-ink text-white shadow-soft'
-                      : 'border border-ink/10 bg-white/70 text-ink/65 hover:border-ink/30 hover:text-ink'
-                  ].join(' ')}
-                >
-                  {filter}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {FILTERS.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={[
+                  'rounded-full px-4 py-2 text-sm font-semibold transition',
+                  activeFilter === filter
+                    ? 'bg-ink text-white shadow-soft'
+                    : 'border border-ink/10 bg-white/70 text-ink/65 hover:border-ink/30 hover:text-ink'
+                ].join(' ')}
+              >
+                {filter}
+              </button>
+            ))}
           </div>
         </section>
 
