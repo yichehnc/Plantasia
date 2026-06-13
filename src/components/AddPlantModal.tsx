@@ -109,8 +109,11 @@ export function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
               Add a plant
             </p>
             <h2 className="font-serif text-5xl italic leading-none md:text-7xl">
-              Keep the pixel plant or upload your own.
+              Keep the pixel study or upload your own plant photo.
             </h2>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-ink/60 md:text-base">
+              Plantasia stays image-relevant by default: generated placeholders for quick setup, or your own real plant shots when you have them.
+            </p>
           </div>
 
           <div className="space-y-4">

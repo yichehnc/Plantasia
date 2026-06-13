@@ -1,14 +1,36 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { CloudRain, Droplets, Sprout } from 'lucide-react';
 import { Plant } from '../data/plants';
 import { cn } from '../lib/utils';
-import { CloudRain, Sprout } from 'lucide-react';
 import { audioEngine } from '../utils/audio';
 
 interface PlantCardProps {
   plant: Plant;
   onClick: () => void;
   onUpdate?: (plant: Plant) => void;
+}
+
+function parseWateringIntervalDays(frequency: string) {
+  const normalized = frequency.trim().toLowerCase();
+  const match = normalized.match(/^(\d+)\s*\/\s*(week|month)$/);
+
+  if (!match) return 7;
+
+  const amount = Number(match[1]);
+  return match[2] === 'week'
+    ? Math.max(1, Math.round(7 / Math.max(amount, 1)))
+    : Math.max(1, Math.round(30 / Math.max(amount, 1)));
+}
+
+function getWateringState(plant: Plant) {
+  const interval = parseWateringIntervalDays(plant.frequency);
+  const daysSince = Math.max(0, Math.floor((Date.now() - new Date(plant.lastWatered).getTime()) / 86400000));
+  const remaining = interval - daysSince;
+
+  if (remaining <= 0) return `Water now`;
+  if (remaining === 1) return 'Water tomorrow';
+  return `${remaining} days left`;
 }
 
 export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }) => {
@@ -20,105 +42,126 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }
     setIsMisting(true);
     await audioEngine.init();
     audioEngine.playMistSound();
-    
+
     if (navigator.vibrate) navigator.vibrate(50);
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       setIsMisting(false);
-      if (onUpdate) {
-        onUpdate({
-          ...plant,
-          vibrancy: Math.min(plant.vibrancy + 0.05, 1.0)
-        });
-      }
-    }, 1000);
+      onUpdate?.({
+        ...plant,
+        vibrancy: Math.min(plant.vibrancy + 0.05, 1),
+      });
+    }, 900);
   };
 
   const startPress = () => {
     pressTimer.current = setTimeout(() => {
       handleMist();
-    }, 600); // 600ms long press
+    }, 600);
   };
 
   const cancelPress = () => {
-    if (pressTimer.current) {
-      clearTimeout(pressTimer.current);
-      pressTimer.current = null;
-    }
+    if (!pressTimer.current) return;
+    clearTimeout(pressTimer.current);
+    pressTimer.current = null;
   };
 
+  const statusTone =
+    plant.status === 'Thriving' ? 'bg-leaf text-white' :
+    plant.status === 'Needs Attention' ? 'bg-clay text-white' :
+    plant.status === 'Dead' ? 'bg-ink text-white' :
+    'bg-sky text-ink';
+
   return (
-    <motion.div
+    <motion.button
       layoutId={`plant-${plant.id}`}
+      type="button"
+      whileHover={{ y: -6 }}
+      transition={{ type: 'spring', stiffness: 220, damping: 20 }}
       onMouseDown={startPress}
       onMouseUp={cancelPress}
       onMouseLeave={cancelPress}
       onTouchStart={startPress}
       onTouchEnd={cancelPress}
-      onClick={(e) => {
+      onClick={() => {
         if (!isMisting) onClick();
       }}
-      className="group cursor-pointer relative flex flex-col items-center text-center"
+      className="group relative flex w-full flex-col overflow-hidden rounded-[2rem] border border-ink/10 bg-white/80 text-left shadow-soft"
     >
-      {/* Image Container - Minimal, no border, just the image */}
-      <div
-        className="relative mb-3 w-full overflow-hidden bg-white/60 shadow-[0_22px_45px_rgba(26,26,26,0.06)]"
-        style={{ aspectRatio: plant.posterRatio ?? 0.75 }}
-      >
-        {imageFailed ? (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-[radial-gradient(circle_at_50%_30%,rgba(40,167,69,0.2),transparent_42%),linear-gradient(135deg,rgba(255,255,255,0.8),rgba(244,241,234,0.4))] p-8 text-green-vibrant">
-            <Sprout className="h-16 w-16 stroke-[1.2]" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-ink/40">
-              Botanical study
-            </span>
-          </div>
-        ) : (
-          <motion.img
-            src={plant.image}
-            alt={plant.name}
-            onError={() => setImageFailed(true)}
-            className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105"
-            style={{
-              filter: `grayscale(${100 - (plant.vibrancy * 100)}%) contrast(1.2) brightness(1.05)`,
-              imageRendering: plant.image.startsWith('data:image/svg+xml') ? 'pixelated' : 'auto',
-              mixBlendMode: 'multiply'
-            }}
-          />
-        )}
-        
-        {/* Mist Overlay */}
-        <AnimatePresence>
-          {isMisting && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 z-10 flex items-center justify-center bg-white/30 backdrop-blur-[1px]"
-            >
-              <CloudRain className="w-8 h-8 text-ink animate-bounce" />
-            </motion.div>
+      <div className="relative overflow-hidden bg-[radial-gradient(circle_at_top,rgba(79,117,67,0.18),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.9),rgba(238,231,217,0.78))] p-4">
+        <div
+          className="relative overflow-hidden rounded-[1.5rem] bg-white/70 shadow-[inset_0_0_0_1px_rgba(15,23,20,0.06)]"
+          style={{ aspectRatio: plant.posterRatio ?? 0.75 }}
+        >
+          {imageFailed ? (
+            <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-[radial-gradient(circle_at_50%_25%,rgba(79,117,67,0.18),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.92),rgba(232,223,205,0.55))] p-8 text-leaf-deep">
+              <Sprout className="h-16 w-16 stroke-[1.2]" />
+              <span className="text-xs font-semibold uppercase tracking-[0.24em] text-ink/40">
+                Pixel study
+              </span>
+            </div>
+          ) : (
+            <motion.img
+              src={plant.image}
+              alt={plant.name}
+              onError={() => setImageFailed(true)}
+              className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+              style={{
+                filter: `grayscale(${100 - plant.vibrancy * 100}%) contrast(1.08) brightness(1.02)`,
+                imageRendering: plant.image.startsWith('data:image/svg+xml') ? 'pixelated' : 'auto',
+                mixBlendMode: 'multiply',
+              }}
+            />
           )}
-        </AnimatePresence>
+
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/25 to-transparent" />
+
+          <AnimatePresence>
+            {isMisting && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-10 flex items-center justify-center bg-white/30 backdrop-blur-[1px]"
+              >
+                <CloudRain className="h-8 w-8 animate-bounce text-ink" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <div className="absolute left-7 top-7 rounded-full bg-white/90 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink shadow-soft">
+          Hold to mist
+        </div>
       </div>
 
-      {/* Typography - Matches the poster style */}
-      <div className="space-y-1">
-        <h3 className="font-sans font-bold text-xs md:text-sm leading-tight uppercase tracking-tight">
-          {plant.name}
-        </h3>
-        <p className="font-serif italic text-[10px] md:text-xs opacity-60">
-          {plant.species}
-        </p>
-      </div>
+      <div className="space-y-5 p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="font-display text-3xl leading-none text-ink">{plant.name}</h3>
+            <p className="mt-2 text-sm italic text-ink/55">{plant.species}</p>
+          </div>
+          <span className={cn('rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em]', statusTone)}>
+            {plant.status}
+          </span>
+        </div>
 
-      {/* Status Indicator - Minimal Dot */}
-      {plant.status !== 'Thriving' && (
-        <div className={cn(
-          "absolute top-0 right-0 w-2 h-2 rounded-full shadow-sm",
-          plant.status === 'Needs Attention' ? "bg-yellow-500" :
-          plant.status === 'Dead' ? "bg-red-500" : "bg-blue-400"
-        )} />
-      )}
-    </motion.div>
+        <div className="grid grid-cols-2 gap-3 text-sm text-ink/70">
+          <div className="rounded-2xl bg-canvas/80 p-3">
+            <div className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/45">
+              <Droplets className="h-4 w-4" />
+              Watering
+            </div>
+            <p className="font-medium text-ink">{plant.waterAmount}</p>
+            <p className="mt-1 text-xs text-ink/55">{plant.frequency}</p>
+          </div>
+          <div className="rounded-2xl bg-canvas/80 p-3">
+            <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/45">Next action</div>
+            <p className="font-medium text-ink">{getWateringState(plant)}</p>
+            <p className="mt-1 text-xs text-ink/55">{plant.light}</p>
+          </div>
+        </div>
+      </div>
+    </motion.button>
   );
 };
