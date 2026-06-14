@@ -12,6 +12,26 @@ const STORAGE_KEY = 'plantasia-archive-v2';
 const FILTERS = ['All', 'Needs Attention', 'Thriving', 'Alive'] as const;
 type Filter = (typeof FILTERS)[number];
 
+function getFilterClasses(filter: Filter, isActive: boolean) {
+  if (!isActive) {
+    return 'border border-ink/10 bg-white/70 text-ink/65 hover:border-ink/30 hover:text-ink';
+  }
+
+  if (filter === 'Thriving') {
+    return 'bg-leaf text-white shadow-soft';
+  }
+
+  if (filter === 'Needs Attention') {
+    return 'bg-clay text-white shadow-soft';
+  }
+
+  if (filter === 'Alive') {
+    return 'bg-sky text-ink shadow-soft';
+  }
+
+  return 'bg-ink text-white shadow-soft';
+}
+
 function parseWateringIntervalDays(frequency: string) {
   const normalized = frequency.trim().toLowerCase();
 
@@ -130,7 +150,7 @@ export default function App() {
             </div>
             <button
               onClick={() => setIsAddingPlant(true)}
-              className="hidden rounded-full border border-ink/15 bg-white/70 px-5 py-3 text-sm font-semibold text-ink shadow-soft transition hover:-translate-y-0.5 hover:border-ink/30 hover:bg-white md:inline-flex"
+              className="hidden rounded-full border border-ink/15 bg-white/70 px-5 py-3 text-sm font-semibold text-ink shadow-soft transition hover:border-ink/30 hover:bg-white md:inline-flex"
             >
               Add a plant
             </button>
@@ -212,7 +232,7 @@ export default function App() {
         </motion.div>
       </header>
 
-      <main className="relative z-10 mx-auto max-w-7xl px-5 pb-24 md:px-8 lg:px-10">
+      <main className="relative z-10 mx-auto max-w-7xl px-5 pb-36 md:px-8 md:pb-24 lg:px-10">
         <section className="panel-solid mb-8 p-5 md:p-6">
           <div className="flex flex-wrap gap-2">
             {FILTERS.map((filter) => (
@@ -221,9 +241,7 @@ export default function App() {
                 onClick={() => setActiveFilter(filter)}
                 className={[
                   'rounded-full px-4 py-2 text-sm font-semibold transition',
-                  activeFilter === filter
-                    ? 'bg-ink text-white shadow-soft'
-                    : 'border border-ink/10 bg-white/70 text-ink/65 hover:border-ink/30 hover:text-ink'
+                  getFilterClasses(filter, activeFilter === filter)
                 ].join(' ')}
               >
                 {filter}
@@ -245,7 +263,7 @@ export default function App() {
 
           <button
             onClick={() => setIsAddingPlant(true)}
-            className="mb-6 hidden min-h-[420px] w-full break-inside-avoid flex-col items-center justify-center gap-4 rounded-[2rem] border border-dashed border-ink/20 bg-white/55 p-8 text-center shadow-soft transition hover:-translate-y-1 hover:border-ink/35 hover:bg-white/80 md:mb-8 md:inline-flex"
+            className="mb-6 hidden min-h-[420px] w-full break-inside-avoid flex-col items-center justify-center gap-4 rounded-[2rem] border border-dashed border-ink/20 bg-white/55 p-8 text-center shadow-soft transition hover:border-ink/35 hover:bg-white/80 md:mb-8 md:inline-flex"
           >
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-4xl text-leaf-deep shadow-soft">+</div>
             <div>
@@ -260,7 +278,7 @@ export default function App() {
 
       <button
         onClick={() => setIsAddingPlant(true)}
-        className="fixed bottom-5 right-5 z-30 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-paper/55 px-4 py-3 text-sm font-semibold text-ink shadow-soft backdrop-blur-md transition hover:bg-paper/75 md:hidden"
+        className="fixed bottom-4 right-4 z-30 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-paper/55 px-4 py-3 text-sm font-semibold text-ink shadow-soft backdrop-blur-md transition hover:bg-paper/75 md:hidden"
       >
         <Plus className="h-4 w-4" />
         Add plant

@@ -358,7 +358,7 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
                 onClick={() => setIsAddingEntry(true)}
                 className="w-full py-4 border-2 border-dashed border-ink/20 rounded-lg flex items-center justify-center gap-2 text-ink/60 hover:bg-ink/5 hover:border-ink/40 transition-all group"
               >
-                <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <Plus className="w-5 h-5" />
                 <span className="font-mono text-sm uppercase tracking-wider">Add Journal Entry</span>
               </button>
             )}

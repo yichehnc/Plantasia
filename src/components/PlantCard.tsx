@@ -76,8 +76,6 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }
     <motion.button
       layoutId={`plant-${plant.id}`}
       type="button"
-      whileHover={{ y: -6 }}
-      transition={{ type: 'spring', stiffness: 220, damping: 20 }}
       onMouseDown={startPress}
       onMouseUp={cancelPress}
       onMouseLeave={cancelPress}
@@ -105,7 +103,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }
               src={plant.image}
               alt={plant.name}
               onError={() => setImageFailed(true)}
-              className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+              className="h-full w-full object-cover"
               style={{
                 filter: `grayscale(${100 - plant.vibrancy * 100}%) contrast(1.08) brightness(1.02)`,
                 imageRendering: plant.image.startsWith('data:image/svg+xml') ? 'pixelated' : 'auto',
@@ -116,37 +114,39 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onClick, onUpdate }
 
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/25 to-transparent" />
 
+          <div className="absolute left-4 top-4">
+            <span className={cn(
+              'inline-flex rounded-full px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] shadow-soft',
+              statusTone
+            )}>
+              {plant.status}
+            </span>
+          </div>
+
           <AnimatePresence>
             {isMisting && (
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 z-10 flex items-center justify-center bg-white/30 backdrop-blur-[1px]"
-              >
-                <CloudRain className="h-8 w-8 animate-bounce text-ink" />
-              </motion.div>
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-10 flex items-center justify-center bg-white/30 backdrop-blur-[1px]"
+            >
+              <CloudRain className="h-8 w-8 text-ink" />
+            </motion.div>
             )}
           </AnimatePresence>
-        </div>
-
-        <div className="absolute left-7 top-7 rounded-full bg-white/90 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink shadow-soft">
-          Hold to mist
         </div>
       </div>
 
       <div className="space-y-5 p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="font-display text-3xl leading-none text-ink">{plant.name}</h3>
+        <div className="space-y-3">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-[2.6rem] leading-[0.9] text-ink sm:text-3xl">{plant.name}</h3>
             <p className="mt-2 text-sm italic text-ink/55">{plant.species}</p>
           </div>
-          <span className={cn('rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em]', statusTone)}>
-            {plant.status}
-          </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 text-sm text-ink/70">
+        <div className="grid grid-cols-1 gap-3 text-sm text-ink/70 min-[420px]:grid-cols-2">
           <div className="rounded-2xl bg-canvas/80 p-3">
             <div className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/45">
               <Droplets className="h-4 w-4" />
