@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Sparkles, Upload } from 'lucide-react';
 import { Plant } from '../data/plants';
@@ -14,6 +14,7 @@ export function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
   const [species, setSpecies] = useState('');
   const [image, setImage] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const canSubmit = name.trim().length > 0;
   const previewImage = image || generatePixelPlant(name.trim() || 'new plant');
@@ -36,6 +37,7 @@ export function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
     };
     reader.onerror = () => setError('Could not read that image file.');
     reader.readAsDataURL(file);
+    event.target.value = '';
   };
 
   const handleSubmit = () => {
@@ -109,8 +111,11 @@ export function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
               Add a plant
             </p>
             <h2 className="font-serif text-5xl italic leading-none md:text-7xl">
-              Keep the pixel plant or upload your own.
+              Keep the pixel study or upload your own plant photo.
             </h2>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-ink/60 md:text-base">
+              Plantasia stays image-relevant by default: generated placeholders for quick setup, or your own real plant shots when you have them.
+            </p>
           </div>
 
           <div className="space-y-4">
@@ -146,13 +151,24 @@ export function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
           )}
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <label className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-ink/20 px-6 font-mono text-xs font-bold uppercase tracking-[0.18em] transition-all hover:border-ink hover:bg-ink/5">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex h-14 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-ink/20 px-6 font-mono text-xs font-bold uppercase tracking-[0.18em] transition-all hover:border-ink hover:bg-ink/5"
+            >
               <Upload className="h-4 w-4" />
               Upload photo
-              <input type="file" accept="image/*" onChange={handleUpload} className="sr-only" />
-            </label>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleUpload}
+              className="sr-only"
+            />
 
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={!canSubmit}
               className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-green-vibrant px-6 font-mono text-xs font-bold uppercase tracking-[0.18em] text-white transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"

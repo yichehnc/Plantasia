@@ -1,24 +1,32 @@
 # Plantasia
 
-Plantasia is a poster-style plant care app for keeping a living archive of houseplants, watering rituals, and plant notes. The interface opens with a huge editorial reminder, then scrolls into a Pinterest-like wall of plant posters.
+Plantasia is a mobile-first plant care archive inspired by the mood of the original *Mother Earth's Plantasia* cover. It combines a curated visual tone with practical plant tracking: status filters, watering cues, journal notes, image upload, and responsive plant cards designed for phone-sized screens first.
 
 ![Plantasia landing page](docs/screenshot.png)
 
 ## What It Does
 
-- Shows a full-screen "Water the Plants" landing poster with scroll-driven motion.
-- Seeds the archive with 11 houseplants.
-- Uses deterministic pixel plant placeholders instead of stock photos.
-- Lets users add a plant with the pixel placeholder or upload their own plant photo.
-- Tracks plant status, watering frequency, light needs, pet friendliness, notes, and journal entries.
-- Includes interactive plant detail views with watering, misting, vibrancy, and generative audio moments.
+- Opens with a Plantasia-inspired cover-led hero instead of a text-heavy landing block.
+- Seeds the archive with 11 houseplants and local pixel-plant artwork.
+- Lets users browse the collection through status filters: `All`, `Needs Attention`, `Thriving`, and `Alive`.
+- Stores plant updates in `localStorage`, so watering and journal changes survive refreshes.
+- Supports adding a plant with either a generated pixel placeholder or an uploaded photo.
+- Includes plant detail views for care information, watering actions, and journal history.
+- Prioritizes calmer interaction design with reduced hover motion and cleaner mobile spacing.
+
+## Current UX Direction
+
+- No irrelevant stock photography in the product experience.
+- Original Plantasia cover mood in the hero, but a cleaner modern archive below it.
+- Mobile usability first: simplified sections, persistent add action, and tighter card layouts.
+- Consistent status color system across filters and plant cards.
 
 ## Tech Stack
 
 - React 19
 - TypeScript
 - Vite
-- Tailwind CSS
+- Tailwind CSS v4
 - Motion
 - Tone.js
 - Lucide React
@@ -32,10 +40,10 @@ npm install
 npm run dev
 ```
 
-The Vite dev server runs at:
+Default local URL:
 
 ```text
-http://localhost:3000
+http://127.0.0.1:3000
 ```
 
 ## Useful Commands
@@ -45,8 +53,8 @@ npm run lint
 npm run build
 ```
 
-## Product Direction
+## Notes
 
-Plantasia is intentionally moving away from remote stock photos. Seeded plants should use local deterministic pixel placeholders until the user uploads their own real plant photo.
-
-The next product plan lives in [TODO.md](TODO.md).
+- Uploaded plant photos are read locally in the browser and stored in app state / browser storage for the current user.
+- Seeded plants still default to deterministic pixel illustrations until a user uploads their own image.
+- The project is currently optimized around the frontend archive experience rather than a backend data service.

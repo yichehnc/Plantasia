@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Plant, JournalEntry } from '../data/plants';
 import { audioEngine } from '../utils/audio';
 import { cn } from '../lib/utils';
-import { Droplets, Sun, ShieldAlert, History, ArrowLeft, CloudRain, Music, BookOpen, Plus, Tag, Camera } from 'lucide-react';
+import { Droplets, Sun, ShieldAlert, History, ArrowLeft, CloudRain, Music, BookOpen, Plus, Tag, Camera, Check } from 'lucide-react';
 
 interface PlantDetailProps {
   plant: Plant;
@@ -125,6 +125,7 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
   };
 
   const availableTags: JournalEntry['tags'][0][] = ['Repotted', 'Fertilized', 'Pest Treatment', 'Pruned', 'Note'];
+  const wateredToday = new Date(plant.lastWatered).toDateString() === new Date().toDateString();
 
   return (
     <motion.div
@@ -182,7 +183,7 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
         {activeTab === 'care' ? (
           <div className="p-6 max-w-2xl mx-auto w-full space-y-8">
             {/* Hero Image Card */}
-            <div className="relative aspect-[3/4] w-full rounded-sm border-2 border-ink/10 p-2 bg-white shadow-lg rotate-1">
+            <div className="relative aspect-[3/4] w-full rounded-sm border-2 border-ink/10 p-2 bg-white shadow-lg">
               <div className="relative w-full h-full overflow-hidden rounded-sm bg-gray-100">
                 <motion.img 
                   src={plant.image} 
@@ -283,13 +284,37 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
               </div>
 
               {/* Water */}
-              <div className="p-4 border border-ink/10 rounded-lg bg-white/50 space-y-2">
+              <div className="p-4 border border-ink/10 rounded-lg bg-white/50 space-y-3">
                 <div className="flex items-center gap-2 text-ink/60">
                   <Droplets className="w-4 h-4" />
                   <span className="text-xs uppercase tracking-wider">Water</span>
                 </div>
                 <p className="font-serif text-lg">{plant.waterAmount}</p>
                 <p className="text-xs opacity-60">{plant.frequency}</p>
+                <button
+                  type="button"
+                  onClick={handleWater}
+                  disabled={isWatering || wateredToday}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left transition-colors",
+                    wateredToday
+                      ? "border-green-vibrant/30 bg-green-vibrant/10 text-ink"
+                      : "border-ink/10 bg-paper/70 text-ink hover:border-ink/25 hover:bg-white",
+                    (isWatering || wateredToday) && "cursor-default"
+                  )}
+                >
+                  <span className="text-xs uppercase tracking-[0.18em] text-ink/60">
+                    {wateredToday ? 'Watered today' : isWatering ? 'Watering...' : 'Mark as watered'}
+                  </span>
+                  <span className={cn(
+                    "flex h-5 w-5 items-center justify-center rounded-sm border transition-colors",
+                    wateredToday
+                      ? "border-green-vibrant bg-green-vibrant text-white"
+                      : "border-ink/25 bg-white text-transparent"
+                  )}>
+                    <Check className="h-3.5 w-3.5" />
+                  </span>
+                </button>
               </div>
             </div>
 
@@ -298,13 +323,13 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
               <h3 className="text-xs uppercase tracking-wider opacity-60">Environmental Needs</h3>
               <div className="flex flex-wrap gap-2">
                 {plant.environmentalNeeds.ventilation && (
-                  <span className="px-2 py-1 bg-ink/5 rounded text-xs">Ventilation (通风)</span>
+                  <span className="px-2 py-1 bg-ink/5 rounded text-xs">Good airflow</span>
                 )}
                 {plant.environmentalNeeds.shadeTolerant && (
-                  <span className="px-2 py-1 bg-ink/5 rounded text-xs">Shade Tolerant (耐阴)</span>
+                  <span className="px-2 py-1 bg-ink/5 rounded text-xs">Shade tolerant</span>
                 )}
                 {plant.environmentalNeeds.brightIndirect && (
-                  <span className="px-2 py-1 bg-ink/5 rounded text-xs">Bright Indirect (明亮散射光)</span>
+                  <span className="px-2 py-1 bg-ink/5 rounded text-xs">Bright indirect light</span>
                 )}
               </div>
             </div>
@@ -333,7 +358,7 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
                 onClick={() => setIsAddingEntry(true)}
                 className="w-full py-4 border-2 border-dashed border-ink/20 rounded-lg flex items-center justify-center gap-2 text-ink/60 hover:bg-ink/5 hover:border-ink/40 transition-all group"
               >
-                <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <Plus className="w-5 h-5" />
                 <span className="font-mono text-sm uppercase tracking-wider">Add Journal Entry</span>
               </button>
             )}
@@ -463,15 +488,6 @@ export function PlantDetail({ plant, onClose, onUpdate }: PlantDetailProps) {
                     transition={{ duration: 0.5 }}
                   />
                 )}
-              </motion.button>
-              
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={handleMist} // Using click for simplicity in web
-                className="w-16 h-16 border-2 border-ink text-ink rounded-xl flex items-center justify-center shadow-sm hover:bg-ink/5 transition-colors"
-                title="Mist (Click)"
-              >
-                <CloudRain className="w-6 h-6" />
               </motion.button>
             </div>
           </motion.div>

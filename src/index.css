@@ -1,59 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@400;700;900&display=swap');
-
 @theme {
-  --font-serif: "Instrument Serif", serif;
-  --font-mono: "DM Mono", monospace;
-  --font-sans: "Inter", sans-serif;
-  
-  --color-paper: #F4F1EA;
-  --color-ink: #1A1A1A;
-  --color-accent: #D45D3A;
-  --color-green-muted: #4A6741;
-  --color-green-vibrant: #28A745; /* Updated to match reference poster green */
+  --font-display: "Fraunces", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-sans: "Manrope", sans-serif;
+
+  --color-canvas: #efe8dc;
+  --color-paper: #fbf7f1;
+  --color-ink: #1d241d;
+  --color-leaf: #4f7543;
+  --color-leaf-deep: #2c4a2c;
+  --color-clay: #c66743;
+  --color-sky: #d9e8df;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background:
+    radial-gradient(circle at top, rgba(79, 117, 67, 0.18), transparent 30%),
+    radial-gradient(circle at 85% 12%, rgba(198, 103, 67, 0.14), transparent 26%),
+    linear-gradient(180deg, #f8f4ed 0%, #efe8dc 100%);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--color-paper);
+  min-height: 100vh;
   color: var(--color-ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+button,
+input,
+textarea {
+  font: inherit;
 }
+
+::selection {
+  background: var(--color-leaf);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(29, 36, 29, 0.18);
+  border-radius: 999px;
 }
 
-/* Grain Overlay */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(29, 36, 29, 0.32);
+}
+
 .grain-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   z-index: 9999;
   opacity: 0.08;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Poster Typography Utilities */
-.text-poster {
-  font-family: var(--font-sans);
-  font-weight: 900;
-  line-height: 0.85;
-  letter-spacing: -0.02em;
+.ambient-orb {
+  position: fixed;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.ambient-orb-a {
+  top: 4rem;
+  right: -4rem;
+  height: 20rem;
+  width: 20rem;
+  background: rgba(79, 117, 67, 0.24);
+}
+
+.ambient-orb-b {
+  bottom: 8rem;
+  left: -5rem;
+  height: 18rem;
+  width: 18rem;
+  background: rgba(198, 103, 67, 0.18);
+}
+
+.display-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  line-height: 0.93;
+  letter-spacing: -0.05em;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(29, 36, 29, 0.52);
+}
+
+.panel-glass {
+  border: 1px solid rgba(29, 36, 29, 0.08);
+  border-radius: 2rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.6));
+  box-shadow: 0 24px 70px rgba(29, 36, 29, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.panel-solid {
+  border: 1px solid rgba(29, 36, 29, 0.08);
+  border-radius: 2rem;
+  background: rgba(251, 247, 241, 0.84);
+  box-shadow: 0 20px 50px rgba(29, 36, 29, 0.05);
+}
+
+.shadow-soft {
+  box-shadow: 0 18px 50px rgba(29, 36, 29, 0.08);
 }
